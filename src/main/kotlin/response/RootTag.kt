@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 
 @JacksonXmlRootElement(localName = "root")
 data class RootTag(
-    @JacksonXmlProperty(localName = "person") val personTag: PersonTag,
+    @JacksonXmlProperty(localName = "person") val personTag: PersonTag? = null,
     @JacksonXmlProperty(localName = "date") val date: String? = null,
     val dynamicElements: Map<String, AgeTag> = emptyMap(),
 ) {

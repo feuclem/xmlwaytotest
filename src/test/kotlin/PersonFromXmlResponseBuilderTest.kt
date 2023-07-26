@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import response.PersonFromXmlResponseBuilder
 import response.RootTag
+import java.time.LocalDate
 
 class PersonFromXmlResponseBuilderTest {
 
@@ -31,7 +32,25 @@ class PersonFromXmlResponseBuilderTest {
             PersonFromXmlResponseBuilder(rootTag = xmlMapper.readValue(xml, RootTag::class.java))
         val result = personFromXmlResponseBuilder.withFirstName().withLastName().withEmail().build()
 
-        val expected = Person("Florencia", "Lia", "Celisse.Angelis@yopmail.com")
-        assertEquals(expected, result)
+        assertEquals("Florencia", result.firstName)
+        assertEquals("Lia", result.lastName)
+        assertEquals("Celisse.Angelis@yopmail.com", result.email)
+    }
+
+    @Test
+    fun `map inscription date`() {
+        @Language("XML")
+        val xml = """
+            <root>
+                <date>2022-12-31</date>
+            </root>
+        """.trimIndent()
+
+        val xmlMapper = XmlMapper().registerKotlinModule().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        val personFromXmlResponseBuilder =
+            PersonFromXmlResponseBuilder(rootTag = xmlMapper.readValue(xml, RootTag::class.java))
+        val result = personFromXmlResponseBuilder.withInscriptionDate().build()
+
+        assertEquals(LocalDate.of(2022, 12, 31), result.inscriptionDate)
     }
 }
