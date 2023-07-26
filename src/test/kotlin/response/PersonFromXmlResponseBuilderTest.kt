@@ -1,11 +1,11 @@
+package response
+
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import response.PersonFromXmlResponseBuilder
-import response.RootTag
 import java.time.LocalDate
 
 class PersonFromXmlResponseBuilderTest {

@@ -4,11 +4,11 @@ import Person
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import request.RootTag.TravellersTag.TravellerTag
 import java.time.LocalDate
 
-class PersonToTravellersBuilder(
+class PersonToTravellersRequestBuilder(
     private val orderId: String,
     private val orderDate: LocalDate,
     private val orderStatus: String,
@@ -25,11 +25,17 @@ class PersonToTravellersBuilder(
         )
     }
 
+    fun withTravellers(): PersonToTravellersRequestBuilder {
+        travellersTag = RootTag.TravellersTag(persons.map { TravellerTag(firstName = it.firstName, lastName = it.lastName) })
+
+        return this
+    }
+
     fun build(): String {
         val rootTag = RootTag(
             orderId = orderId,
             customer = customerTag,
-            travellers = travellersTag
+            travellers = travellersTag,
         )
         val xmlMapper = XmlMapper().registerKotlinModule().registerModule(JavaTimeModule()).disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
