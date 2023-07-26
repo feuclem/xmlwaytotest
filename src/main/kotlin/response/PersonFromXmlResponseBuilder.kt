@@ -1,6 +1,7 @@
 package response
 
 import Person
+import com.fasterxml.jackson.databind.JsonDeserializer
 import java.time.LocalDate
 
 class PersonFromXmlResponseBuilder(private var rootTag: RootTag) {
@@ -30,8 +31,10 @@ class PersonFromXmlResponseBuilder(private var rootTag: RootTag) {
         return this
     }
 
-    fun withAge() {
-
+    fun withAge(): PersonFromXmlResponseBuilder {
+        val firstName2 = rootTag.personTag!!.firstname2
+        age = rootTag.dynamicData[firstName2]!!.age
+        return this
     }
 
     fun build(): Person {
@@ -44,3 +47,4 @@ class PersonFromXmlResponseBuilder(private var rootTag: RootTag) {
         )
     }
 }
+

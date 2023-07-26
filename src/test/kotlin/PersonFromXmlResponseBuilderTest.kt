@@ -2,7 +2,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.intellij.lang.annotations.Language
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import response.PersonFromXmlResponseBuilder
 import response.RootTag
@@ -52,5 +52,25 @@ class PersonFromXmlResponseBuilderTest {
         val result = personFromXmlResponseBuilder.withInscriptionDate().build()
 
         assertEquals(LocalDate.of(2022, 12, 31), result.inscriptionDate)
+    }
+
+    @Test
+    fun `map custom age tag`() {
+        @Language("XML")
+        val xml = """
+            <root>
+                <person firstname2="Celisse" />
+                <Celisse>
+                    <age>32</age>
+                </Celisse>
+            </root>
+        """.trimIndent()
+
+        val xmlMapper = XmlMapper().registerKotlinModule().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        val personFromXmlResponseBuilder =
+            PersonFromXmlResponseBuilder(rootTag = xmlMapper.readValue(xml, RootTag::class.java))
+        val result = personFromXmlResponseBuilder.withAge().build()
+
+        assertEquals(32, result.age)
     }
 }
